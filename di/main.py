@@ -112,11 +112,20 @@ def injector(dependencies):
 
     def wrapper(fn, warn=True):
         # Extract default values for keyword arguments
-        args, varargs, keywords, defaults = inspect.getargspec(fn)
-        if defaults:
-            defaults = dict(zip(reversed(args), reversed(defaults)))
-        else:
-            defaults = {}
+        try:
+            args, _ , _ , defaults = inspect.getargspec(fn)[:4]
+            if defaults:
+                defaults = dict(zip(reversed(args), reversed(defaults)))
+            else:
+                defaults = {}
+        except ValueError:
+            if not PY2:
+                # try to got it from kwonlydefaults as a sort of functions
+                # with a signature such as fn(*args, di=di_value, **kwargs)
+                # defaults come well packed
+                defaults = inspect.getfullargspec(fn)[5]
+                if not defaults:
+                    defaults = {}
 
         # Mapping for injectable values (classes used as default value)
         mapping = {}

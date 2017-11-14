@@ -94,6 +94,8 @@ Those are the python interpreters being validated via [travis.ci](https://github
 - python 2.7
 - python 3.3
 - python 3.4
+- python 3.5
+- python 3.6
 - pypy
 
 # Install
